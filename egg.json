@@ -1,0 +1,72 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2022-11-10T20:07:53-05:00",
+    "name": "Luvit",
+    "author": "beelzebub@incredible-gmod.ru",
+    "description": "A Luvit egg.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/parkervcp\/yolks:debian": "ghcr.io\/parkervcp\/yolks:debian"
+    },
+    "file_denylist": [],
+    "startup": ".\/luvit {{STARTUP_FILE}}",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Server startup complete\"\r\n}",
+        "logs": "{}",
+        "stop": "^c"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n\r\nGREEN=\"\\033[0;32m\"\r\nCLEAR=\"\\033[0m\"\r\n\r\necho -e \"${GREEN}downloading apt dependencies\\n${CLEAR}\"\r\n\r\napt update\r\napt install -y curl\r\n\r\nif [ \"${APT_PACKAGES}\" != \"\" ]; then\r\n    apt install -y ${APT_PACKAGES}\r\nfi\r\n\r\nif [ \"${LIT_GIT_PACKAGES}\" != \"\" ]; then\r\n    apt install -y ${APT_PACKAGES}\r\nfi\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\necho -e \"${GREEN}downloading luvit\\n${CLEAR}\"\r\ncurl -L https:\/\/github.com\/luvit\/lit\/raw\/master\/get-lit.sh | sh\r\n\r\nmkdir -p \/mnt\/server\/deps\r\n\r\nif [ \"${LIT_PACKAGES}\" != \"\" ]; then\r\n    echo -e \"${GREEN}downloading lit packages\\n${CLEAR}\"\r\n    .\/lit install ${LIT_PACKAGES}\r\nfi\r\n\r\nif [ \"${LIT_GIT_PACKAGES}\" != \"\" ]; then\r\n    echo -e \"${GREEN}downloading lit packages from git\\n${CLEAR}\"\r\n    echo ${LIT_GIT_PACKAGES} | xargs -n1 | xargs -I{} git clone {}\r\nfi\r\n\r\necho 'local readme = \"Put your app code here.\"\r\nprint(\"Server startup complete\") -- put this line in your app code so that the wings daemon can mark your server as running (or your app uptime will be in 'Starting' stage all time)\r\nprint(\"put your app code in start.lua & restart server.\")' > start.lua\r\necho -e \"${GREEN}installation done! put your app code in start.lua & start server.\\n${CLEAR}\"",
+            "container": "debian:buster-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Startup file",
+            "description": "The Lua file to run",
+            "env_variable": "STARTUP_FILE",
+            "default_value": "start.lua",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Lit Packages",
+            "description": "Lit Packages to install\r\n\r\nexample: <code>SinisterRectus\/discordia lduboeuf\/cjson<\/code>",
+            "env_variable": "LIT_PACKAGES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Apt packages",
+            "description": "Apt packages to install\r\n\r\nexample: <code>sqlite3 libsqlite3-dev<\/code>",
+            "env_variable": "APT_PACKAGES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Lit Packages (from git)",
+            "description": "Lit Packages from git to install\r\n\r\nexample: <code>git@github.com:SinisterRectus\/Discordia.git git@github.com:Be1zebub\/Discordia-Expanded.git<\/code>",
+            "env_variable": "LIT_GIT_PACKAGES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        }
+    ]
+}
