@@ -11,7 +11,7 @@ GREEN="\033[0;32m"
 CLEAR="\033[0m"
 
 if [ "${APT_PACKAGES}" != "" ]; then
-	echo -e "${GREEN}installing apt packages...${CLEAR}";
+	echo -e "${GREEN}Installing apt packages...${CLEAR}";
     apt install -y ${APT_PACKAGES};
 fi
 
@@ -24,6 +24,9 @@ mkdir -p /home/container/deps
 
 ## Auto update
 if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
+	echo -e "${GREEN}Auto-update apt packages...${CLEAR}";
+	apt update;
+
 	echo -e "${GREEN}Auto-update lit/luvi/luvit...${CLEAR}";
     curl -L https://raw.githubusercontent.com/Be1zebub/lit/master/update-lit.sh | bash /dev/stdin --lastest;
 	
