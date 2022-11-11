@@ -40,7 +40,7 @@ RUN          apt update \
              && apt upgrade -y
 
 ## Install dependencies
-RUN         apt -y install ca-certificates tar curl build-essential libtool
+RUN         apt -y install ca-certificates curl build-essential libtool locales iproute2 net-tools
 
 ## Configure locale
 RUN          update-locale lang=en_US.UTF-8 \
