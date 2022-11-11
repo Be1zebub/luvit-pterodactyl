@@ -42,6 +42,10 @@ RUN          apt update \
 ## Install dependencies
 RUN         apt -y install ca-certificates tar curl build-essential libtool
 
+## Install luvit
+RUN         cd /home/container/
+RUN         curl -L https://github.com/luvit/lit/raw/master/get-lit.sh | sh
+
 ## Configure locale
 RUN          update-locale lang=en_US.UTF-8 \
              && dpkg-reconfigure --frontend noninteractive locales
