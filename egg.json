@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2022-11-10T20:26:57-05:00",
+    "exported_at": "2022-11-13T08:24:16-05:00",
     "name": "Luvit",
     "author": "beelzebub@incredible-gmod.ru",
     "description": "A Luvit egg.",
@@ -40,7 +40,7 @@
         },
         {
             "name": "Apt packages",
-            "description": "Apt packages to install\r\n\r\nexample: <code>ffmpeg sqlite3 libsqlite3-dev<\/code>",
+            "description": "Apt packages to install\r\n\r\nexample: <code>sqlite3 libsqlite3-dev<\/code>",
             "env_variable": "APT_PACKAGES",
             "default_value": "",
             "user_viewable": true,
@@ -50,12 +50,32 @@
         },
         {
             "name": "Auto update",
-            "description": "Auto update apt packages, lit packages from package.lua, lit\/luvi\/luvit?",
+            "description": "Auto update apt packages, lit packages from package.lua, lit, luvi, luvit.",
             "env_variable": "AUTO_UPDATE",
             "default_value": "1",
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Lit version",
+            "description": "Works only with \"Auto update\" enabled.\r\nVersions list: https:\/\/github.com\/luvit\/lit\/tags\r\nSet the value to \"lastest\" so that the yolk always update the lit to the latest version.",
+            "env_variable": "LIT_VERSION",
+            "default_value": "lastest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Luvi version",
+            "description": "Works only with \"Auto update\" enabled.\r\nVersions list: https:\/\/github.com\/luvit\/luvi\/releases\r\nSet the value to \"lastest\" so that the yolk always update the luvi to the latest version.",
+            "env_variable": "LUVI_VERSION",
+            "default_value": "latest",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
             "field_type": "text"
         }
     ]
