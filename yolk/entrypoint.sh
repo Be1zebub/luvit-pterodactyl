@@ -28,7 +28,16 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
 	apt update;
 
 	echo -e "${GREEN}Auto-update lit/luvi/luvit...${CLEAR}";
-	curl -L https://raw.githubusercontent.com/Be1zebub/lit/master/update-lit.sh | bash /dev/stdin --lastest;
+
+	if [ "${LIT_VERSION}" == "" ]; then
+		LIT_VERSION='lastest';
+	fi
+
+	if [ "${LUVI_VERSION}" == "" ]; then
+		LUVI_VERSION='lastest';
+	fi
+
+	curl -L https://raw.githubusercontent.com/Be1zebub/lit/master/update-lit.sh | bash /dev/stdin -lit-ver ${LIT_VERSION} -luvi-ver ${LUVI_VERSION};
 
 	if [ -e "package.lua" ]; then
 		echo -e "${GREEN}Auto-update deps from package.lua...${CLEAR}";
