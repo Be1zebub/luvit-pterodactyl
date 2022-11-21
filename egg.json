@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2022-11-21T04:18:26-05:00",
+    "exported_at": "2022-11-21T05:10:01-05:00",
     "name": "Luvit",
     "author": "beelzebub@incredible-gmod.ru",
     "description": "A Luvit egg.",
@@ -22,7 +22,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n\r\nGREEN=\"\\033[0;32m\"\r\nCLEAR=\"\\033[0m\"\r\n\r\necho -e \"${GREEN}downloading apt dependencies${CLEAR}\"\r\n\r\napt update\r\napt install -y curl\r\n\r\nmkdir -p \/mnt\/server\r\nmkdir -p \/mnt\/server\/deps\r\ncd \/mnt\/server\r\n\r\n# temp unset egg vars to solve conflicts (lit installation script uses the same vars)\r\n_LIT_VERSION=\"$LIT_VERSION\"\r\n_LUVI_VERSION=\"$LUVI_VERSION\"\r\nexport LIT_VERSION=\r\nexport LUVI_VERSION=\r\n\r\necho -e \"${GREEN}downloading luvit${CLEAR}\"\r\ncurl -L https:\/\/raw.githubusercontent.com\/Be1zebub\/lit\/master\/update-lit.sh | sh\r\n# curl -L https:\/\/raw.githubusercontent.com\/luvit\/lit\/master\/get-lit.sh | env -i sh\r\n\r\nexport LIT_VERSION=\"$_LIT_VERSION\"\r\nexport LUVI_VERSION=\"$_LUVI_VERSION\"\r\n\r\necho 'local readme = \"Put your app code here.\"\r\nprint(\"Server startup complete\") -- put this line in your app code so that the wings daemon can mark your server as running (or your app uptime will be in 'Starting' stage all time)\r\nprint(\"put your app code in start.lua & restart server.\")' > start.lua\r\n\r\necho -e \"${GREEN}installation done! put your app code in start.lua & start server.${CLEAR}\"",
+            "script": "#!\/bin\/bash\r\n\r\nGREEN=\"\\033[0;32m\"\r\nCLEAR=\"\\033[0m\"\r\n\r\necho -e \"${GREEN}downloading apt dependencies${CLEAR}\"\r\n\r\napt update\r\napt install -y curl\r\n\r\nif [ \"${APT_PACKAGES}\" != \"\" ]; then\r\n\techo -e \"${GREEN}Installing apt packages...${CLEAR}\";\r\n\tapt install -y \"${APT_PACKAGES}\";\r\nfi\r\n\r\nmkdir -p \/mnt\/server\r\nmkdir -p \/mnt\/server\/deps\r\ncd \/mnt\/server\r\n\r\n# temp unset egg vars to solve conflicts (lit installation script uses the same vars)\r\n_LIT_VERSION=\"$LIT_VERSION\"\r\n_LUVI_VERSION=\"$LUVI_VERSION\"\r\nexport LIT_VERSION=\r\nexport LUVI_VERSION=\r\n\r\necho -e \"${GREEN}downloading luvit${CLEAR}\"\r\ncurl -L https:\/\/raw.githubusercontent.com\/Be1zebub\/lit\/master\/update-lit.sh | sh\r\n# curl -L https:\/\/raw.githubusercontent.com\/luvit\/lit\/master\/get-lit.sh | env -i sh\r\n\r\nexport LIT_VERSION=\"$_LIT_VERSION\"\r\nexport LUVI_VERSION=\"$_LUVI_VERSION\"\r\n\r\necho 'print(\"Server startup complete\") -- put this line in your app code so that the wings daemon can mark your server as running (or your app uptime will be in 'Starting' stage all time)\r\n\r\nlocal http = require(\"http\")\r\nlocal env = require(\"env\")\r\n\r\nlocal port = tonumber(env.get(\"SERVER_PORT\"))\r\n\r\nhttp.createServer(function (req, res)\r\n  local body = \"Hello world\\n\"\r\n  res:setHeader(\"Content-Type\", \"text\/plain\")\r\n  res:setHeader(\"Content-Length\", #body)\r\n  res:finish(body)\r\nend):listen(port, \"127.0.0.1\")\r\n\r\nprint(\"Server running at http:\/\/127.0.0.1:\".. port ..\"\/\")' > start.lua\r\n\r\necho -e \"${GREEN}installation done! put your app code in start.lua & start server.${CLEAR}\"",
             "container": "debian:buster-slim",
             "entrypoint": "bash"
         }
@@ -40,11 +40,11 @@
         },
         {
             "name": "Apt packages",
-            "description": "Apt packages to install\r\n\r\nexample: <code>sqlite3 libsqlite3-dev<\/code>",
+            "description": "Apt packages to install\r\n\r\nexample: <code>sqlite3 libsqlite3-dev<\/code>\r\n(it installs when the server is installs, unfortunately there is no way to make the installation of apt packages dynamic, every time the server starts)",
             "env_variable": "APT_PACKAGES",
             "default_value": "",
             "user_viewable": true,
-            "user_editable": true,
+            "user_editable": false,
             "rules": "nullable|string",
             "field_type": "text"
         },
