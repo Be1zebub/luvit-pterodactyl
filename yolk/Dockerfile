@@ -29,24 +29,23 @@ LABEL       org.opencontainers.image.licenses=MIT
 
 ENV          DEBIAN_FRONTEND noninteractive
 
-RUN          useradd -m -d /home/container -s /bin/bash container
-
-RUN          ln -s /home/container/ /nonexistent
-
-ENV          USER=container HOME=/home/container
-
-## Update base packages
-RUN          apt update \
-             && apt upgrade -y
+## RUN          useradd -m -d /home/container -s /bin/bash container
+## RUN          ln -s /home/container/ /nonexistent
+## ENV          USER=container HOME=/home/container
 
 ## Install dependencies
-RUN         apt -y install ca-certificates curl build-essential libtool locales iproute2 net-tools
+RUN         dpkg --add-architecture i386 \
+            && apt update \
+            && apt upgrade -y \
+            &&apt -y install ca-certificates curl build-essential libtool locales iproute2 net-tools tar gcc g++ lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 gdb libsdl1.2debian libfontconfig1 telnet netcat tzdata
+            && useradd -m -d /home/container container
 
 ## Configure locale
 RUN          update-locale lang=en_US.UTF-8 \
              && dpkg-reconfigure --frontend noninteractive locales
 
-
+USER        container
+ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
 
 COPY        ./entrypoint.sh /entrypoint.sh
