@@ -14,3 +14,4 @@ Run your luvit apps in pterodactyl!
 ![image](https://user-images.githubusercontent.com/34854689/175773972-078bb5b8-d9ba-48a5-a2bc-45a0ac5ee7ee.png)
 4. Upload our egg
 5. Create a server with a `Luvit` egg & have a fun <3
+![image](https://user-images.githubusercontent.com/34854689/203028262-16ca987b-42e9-43c6-ad3a-0e73649bb6e9.png)
