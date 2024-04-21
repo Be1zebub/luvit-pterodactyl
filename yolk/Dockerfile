@@ -31,18 +31,19 @@ LABEL 		org.opencontainers.image.licenses=MIT
 ENV         DEBIAN_FRONTEND=noninteractive
 
 # Обновление списка пакетов и установка основных пакетов
-RUN      apt update && apt upgrade -y \
-         && apt -y --no-install-recommends install ca-certificates curl git unzip zip tar jq wget
+RUN      	apt update && apt upgrade -y \
+         	&& apt -y --no-install-recommends install ca-certificates curl git unzip zip tar jq wget \
+		 	&& apt install -y locales
 
 # Установка дополнительных зависимостей для функций голосового чата Discordia
-RUN apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
+RUN 		apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
 
 # Настройка локали
-RUN update-locale lang=en_US.UTF-8 && \
-    dpkg-reconfigure --frontend noninteractive locales
+RUN 		update-locale lang=en_US.UTF-8 && \
+    		dpkg-reconfigure --frontend noninteractive locales
 
 # Создание пользователя и установка рабочего каталога
-RUN useradd -m -d /home/container container
+RUN 		useradd -m -d /home/container container
 
 # Установка переменных среды и рабочего каталога пользователя
 USER container
