@@ -40,6 +40,9 @@ RUN         dpkg --add-architecture i386 \
             && apt -y install ca-certificates curl build-essential libtool locales iproute2 net-tools tar gcc g++ lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 gdb libsdl1.2debian libfontconfig1 telnet netcat tzdata \
             && useradd -m -d /home/container container
 
+## Install Discordia voice features deps
+RUN			apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
+
 ## Configure locale
 RUN          update-locale lang=en_US.UTF-8 \
              && dpkg-reconfigure --frontend noninteractive locales
