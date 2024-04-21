@@ -20,36 +20,42 @@
 # SOFTWARE.
 #
 
-FROM        --platform=$TARGETOS/$TARGETARCH debian:stable-slim
+FROM --platform=$TARGETOS/$TARGETARCH debian:stable-slim
 
-LABEL       author="Be1zebub" maintainer="beelzebub@incredible-gmod.ru"
+LABEL author="Be1zebub" maintainer="beelzebub@incredible-gmod.ru"
+LABEL org.opencontainers.image.source="https://github.com/Be1zebub/yolks"
+LABEL org.opencontainers.image.licenses=MIT
 
-LABEL       org.opencontainers.image.source="https://github.com/Be1zebub/yolks"
-LABEL       org.opencontainers.image.licenses=MIT
+ENV DEBIAN_FRONTEND noninteractive
 
-ENV          DEBIAN_FRONTEND noninteractive
+# Add i386 architecture
+RUN dpkg --add-architecture i386
 
-## RUN          useradd -m -d /home/container -s /bin/bash container
-## RUN          ln -s /home/container/ /nonexistent
-## ENV          USER=container HOME=/home/container
+# Install essential packages
+RUN apt update && apt -y install ca-certificates curl
 
-## Install dependencies
-RUN         dpkg --add-architecture i386 \
-            && apt update \
-            && apt upgrade -y \
-            && apt -y install ca-certificates curl build-essential libtool locales iproute2 net-tools tar gcc g++ lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 gdb libsdl1.2debian libfontconfig1 telnet netcat tzdata \
-            && useradd -m -d /home/container container
+# Upgrade existing packages and install required dependencies
+RUN apt upgrade -y && \
+    apt -y install build-essential libtool locales iproute2 net-tools tar gcc g++ \
+    lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 \
+    lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 \
+    libcurl3-gnutls:i386 libsdl2-2.0-0:i386 gdb libsdl1.2debian libfontconfig1 \
+    telnet netcat tzdata
 
-## Install Discordia voice features deps
-RUN			apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
+# Install additional dependencies for Discordia voice features
+RUN apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
 
-## Configure locale
-RUN          update-locale lang=en_US.UTF-8 \
-             && dpkg-reconfigure --frontend noninteractive locales
+# Configure locale
+RUN update-locale lang=en_US.UTF-8 && \
+    dpkg-reconfigure --frontend noninteractive locales
 
-USER        container
-ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
+# Create user and set working directory
+RUN useradd -m -d /home/container container
 
-COPY        ./entrypoint.sh /entrypoint.sh
-CMD         [ "/bin/bash", "/entrypoint.sh" ]
+USER container
+ENV USER=container HOME=/home/container
+WORKDIR /home/container
+
+# Copy entrypoint script and set command
+COPY ./entrypoint.sh /entrypoint.sh
+CMD ["/bin/bash", "/entrypoint.sh"]
