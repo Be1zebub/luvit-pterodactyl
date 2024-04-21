@@ -28,19 +28,11 @@ LABEL 		author="Be1zebub" maintainer="beelzebub@incredible-gmod.ru"
 LABEL 		org.opencontainers.image.licenses=MIT
 
 # Неинтерактивная настройка окружения
-ENV 		DEBIAN_FRONTEND noninteractive
+ENV         DEBIAN_FRONTEND=noninteractive
 
 # Обновление списка пакетов и установка основных пакетов
 RUN      apt update && apt upgrade -y \
          && apt -y --no-install-recommends install ca-certificates curl git unzip zip tar jq wget
-
-# Only install the needed steamcmd packages on the AMD64 build
-RUN         if [ "$(uname -m)" = "x86_64" ]; then \
-                dpkg --add-architecture i386 && \
-                apt update && \
-                apt -y install lib32gcc-s1 libsdl2-2.0-0:i386; \
-            fi0-0:i386 gdb libsdl1.2debian libfontconfig1 \
-    telnet netcat tzdata
 
 # Установка дополнительных зависимостей для функций голосового чата Discordia
 RUN apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
