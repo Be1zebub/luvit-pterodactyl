@@ -32,7 +32,8 @@ ENV         DEBIAN_FRONTEND=noninteractive
 
 # Обновление списка пакетов и установка основных пакетов
 RUN      	apt update && apt upgrade -y \
-         	&& apt -y --no-install-recommends install ca-certificates curl git unzip zip tar jq wget libtool iproute2 net-tools netcat \
+         	&& apt -y --no-install-recommends install ca-certificates curl git unzip zip tar jq wget \
+		  	&& apt install -y iproute2 net-tools \
 		 	&& apt install -y locales
 
 # Установка дополнительных зависимостей для функций голосового чата Discordia
