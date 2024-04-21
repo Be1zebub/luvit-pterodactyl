@@ -20,21 +20,25 @@
 # SOFTWARE.
 #
 
+# Базовый образ
 FROM --platform=$TARGETOS/$TARGETARCH debian:stable-slim
 
+# Метаданные
 LABEL author="Be1zebub" maintainer="beelzebub@incredible-gmod.ru"
 LABEL org.opencontainers.image.source="https://github.com/Be1zebub/yolks"
 LABEL org.opencontainers.image.licenses=MIT
 
+# Неинтерактивная настройка окружения
 ENV DEBIAN_FRONTEND noninteractive
 
-# Add i386 architecture
+# Добавление i386 архитектуры
 RUN dpkg --add-architecture i386
 
-# Install essential packages
-RUN apt update && apt -y install ca-certificates curl
+# Обновление списка пакетов и установка основных пакетов
+RUN apt update && \
+    apt -y install ca-certificates curl
 
-# Upgrade existing packages and install required dependencies
+# Обновление существующих пакетов и установка необходимых зависимостей
 RUN apt upgrade -y && \
     apt -y install build-essential libtool locales iproute2 net-tools tar gcc g++ \
     lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 \
@@ -42,20 +46,21 @@ RUN apt upgrade -y && \
     libcurl3-gnutls:i386 libsdl2-2.0-0:i386 gdb libsdl1.2debian libfontconfig1 \
     telnet netcat tzdata
 
-# Install additional dependencies for Discordia voice features
+# Установка дополнительных зависимостей для функций голосового чата Discordia
 RUN apt install -y sqlite3 libsqlite3-dev libopus-dev libsodium-dev ffmpeg
 
-# Configure locale
+# Настройка локали
 RUN update-locale lang=en_US.UTF-8 && \
     dpkg-reconfigure --frontend noninteractive locales
 
-# Create user and set working directory
+# Создание пользователя и установка рабочего каталога
 RUN useradd -m -d /home/container container
 
+# Установка переменных среды и рабочего каталога пользователя
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 
-# Copy entrypoint script and set command
+# Копирование скрипта входа и установка команды по умолчанию
 COPY ./entrypoint.sh /entrypoint.sh
 CMD ["/bin/bash", "/entrypoint.sh"]
