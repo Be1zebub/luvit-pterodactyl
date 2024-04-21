@@ -21,29 +21,25 @@
 #
 
 # Базовый образ
-FROM --platform=$TARGETOS/$TARGETARCH debian:stable-slim
+FROM        --platform=$TARGETOS/$TARGETARCH debian:bookworm-slim
 
 # Метаданные
-LABEL author="Be1zebub" maintainer="beelzebub@incredible-gmod.ru"
-LABEL org.opencontainers.image.source="https://github.com/Be1zebub/yolks"
-LABEL org.opencontainers.image.licenses=MIT
+LABEL 		author="Be1zebub" maintainer="beelzebub@incredible-gmod.ru"
+LABEL 		org.opencontainers.image.licenses=MIT
 
 # Неинтерактивная настройка окружения
-ENV DEBIAN_FRONTEND noninteractive
-
-# Добавление i386 архитектуры
-RUN dpkg --add-architecture i386
+ENV 		DEBIAN_FRONTEND noninteractive
 
 # Обновление списка пакетов и установка основных пакетов
-RUN apt update && \
-    apt -y install ca-certificates curl
+RUN      apt update && apt upgrade -y \
+         && apt -y --no-install-recommends install ca-certificates curl git unzip zip tar jq wget
 
-# Обновление существующих пакетов и установка необходимых зависимостей
-RUN apt upgrade -y && \
-    apt -y install build-essential libtool locales iproute2 net-tools tar gcc g++ \
-    lib32gcc-s1 libgcc1 libcurl4-gnutls-dev:i386 libssl1.1:i386 libcurl4:i386 \
-    lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 \
-    libcurl3-gnutls:i386 libsdl2-2.0-0:i386 gdb libsdl1.2debian libfontconfig1 \
+# Only install the needed steamcmd packages on the AMD64 build
+RUN         if [ "$(uname -m)" = "x86_64" ]; then \
+                dpkg --add-architecture i386 && \
+                apt update && \
+                apt -y install lib32gcc-s1 libsdl2-2.0-0:i386; \
+            fi0-0:i386 gdb libsdl1.2debian libfontconfig1 \
     telnet netcat tzdata
 
 # Установка дополнительных зависимостей для функций голосового чата Discordia
